@@ -3,7 +3,7 @@ A tool to **sup**port **S**uper **M**ario **S**unshine **T**ool **A**ssisted **S
 
 ## Installation
 ```
-pip install supSMSTAS==0.0.1
+pip install supSMSTAS
 ```
 
 ## Usage

@@ -1,5 +1,5 @@
 # CHANGELOG
-## \[v0.0.1] init
+## \[v0.0.1] init (2022/06/26)
 - WFC
   - plot WFC hitbox (x-z plot and x/z-y plot) with matplotlib toolbar
   - options:
