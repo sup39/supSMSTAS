@@ -1,10 +1,9 @@
-This software is provided under:
+Most of supSMSTAS's source code is licensed under GPLv3. Part of the source
+code distributed in this repository is derived from other projects and
+may have stronger or weaker licensing requirement.
 
-    SPDX-License-Identifier: GPL-3.0-only
+Per-file licensing information is provided via SPDX tags [1]. The licenses
+referenced in these tags can be found in the LICENSES/ directory within this
+source repository.
 
-Being under the terms of the GNU General Public License version 3 only,
-according with:
-
-    LICENSES/GPL-3.0
-
-All contributions to this software are subject to this COPYING file.
+[1] https://spdx.dev/

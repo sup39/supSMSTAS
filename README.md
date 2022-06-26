@@ -32,7 +32,7 @@ alter QF sync (advance by QF) or render triangle/hitbox
 if you are using any of them.
 
 If the checkboxes in the Runtime tab don't work,
-try to disable all Gecko codes in Dolphin (except the *required Gecko code*).
+try to disable all Gecko codes in Dolphin (except the *required Gecko code* mentioned above).
 
 ## Execute the source code directly
 To install dependencies, the easiest way is to run the following command
@@ -45,7 +45,7 @@ Due to some module/script problems,
 in order to start the program,
 instead of using `python path/to/supSMSTAS/__main__.py` (as script),
 make sure to use `python -m path.to.supSMSTAS` (as module) outside the `src/supSMSTAS/` directory.
-For example, if you are in `src/` directory, you can run the following command:
+For example, if you are in the `src/` directory, you can run the following command:
 ```
 python -m supSMSTAS
 ```
