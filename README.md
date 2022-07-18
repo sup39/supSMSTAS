@@ -6,9 +6,9 @@
 
 *A tool to **sup**port **S**uper **M**ario **S**unshine **T**ool **A**ssisted **S**peedrun/Superplay*
 
-## Installation
+## Installation/Update
 ```
-pip install supSMSTAS
+pip install -U supSMSTAS
 ```
 :warning: Python 3.8 or above is required
 

@@ -7,10 +7,10 @@
 *A tool to **sup**port **S**uper **M**ario **S**unshine **T**ool **A**ssisted **S**peedrun/Superplay*  
 サンシャインTASをサポートするためのツール
 
-## インストール
+## インストール・アップデート
 cmd.exeなどで次の命令を実行します：
 ```
-pip install supSMSTAS
+pip install -U supSMSTAS
 ```
 :warning: Python 3.8以上が必要です
 
