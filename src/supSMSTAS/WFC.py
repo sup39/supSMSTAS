@@ -4,7 +4,7 @@
 import numpy as np
 from numpy import array
 from .shape import Polyhedron
-import matplotlib.patches as patches
+from matplotlib.collections import PolyCollection
 
 class Surface:
   def __init__(self, surtype, surpara, trntype, unk7, verts, vidxs=None, n=None, c=None):
@@ -81,17 +81,28 @@ def makeWall(tri, rW=50, dy=30):
 
 def make_geo_plot(ax, hitboxs, p0, pn, axes):
   # paras
-  arrowWidthBase = 60
-  arrowWidthMul = 0.2
-  arrowLenMax = 80
+  arrowWidthBase = 70
+  arrowWidthMul = 0.5
+  arrowLenMax = 200 #80
   arrowLenTher = 200
   arrowLenMul1 = 0.7
   arrowLenMul2 = 0.35
   arrowHeadLenMul = 0.3
-  arrowLenMul2off = 0.025
-  arrowCountMax = 20
+  arrowLenMul2off = 0.1 #0.025
+  arrowCountMax = 100
+  aw, ah = 0.2, 0.6 # width, height of bottom rect
+  arrowVerts = array([
+    [0.0,  aw],
+    [ ah,  aw],
+    [ ah, 0.5],
+    [1.0, 0.0],
+    [ ah, -.5],
+    [ ah, -aw],
+    [0.0, -aw],
+  ])
 
   # plot
+  patches = []
   for polys, awmul, alen, facecolor, arcolor in hitboxs:
     # draw wall hitboxs (draw in reverse order)
     for poly, n in polys[::-1]:
@@ -99,7 +110,7 @@ def make_geo_plot(ax, hitboxs, p0, pn, axes):
       verts = poly.slicePlane(p0, pn)[:,axes]
       if len(verts) == 0: continue
       # plot hitbox area
-      ax.add_patch(patches.Polygon(verts, fc=facecolor, ec='black', lw=1))
+      patches.append((verts, facecolor, 'black')) # (verts, fc, ec)
       # plot arrow
       n = n*(1, 0, 1) # no y arrow
       n = n[axes]
@@ -147,27 +158,34 @@ def make_geo_plot(ax, hitboxs, p0, pn, axes):
       ncts = nbss.mean(axis=0)
       nrgs = np.abs(np.diff(nbss, axis=0)[0])
       # add arrow
+      maty = array([-n[1], n[0]])*arrowWidth
       for p, nrg in zip(
         C+np.matmul(np.column_stack([ncts, ls]), B),
         nrgs,
       ):
         if nrg > arrowLenTher:
           nrg = min(arrowLenMax, nrg*arrowLenMul2)
-          dn = n * nrg
           offs = [-arrowLenMul2off, 1+arrowLenMul2off]
         else:
           nrg = min(arrowLenMax, nrg*arrowLenMul1)
-          dn = n * nrg
           offs = [0.5]
-        arrowHeadLen = nrg*arrowHeadLenMul
+        dn = n * nrg
+        # add patches
+        verts0 = np.matmul(arrowVerts, [n*nrg, maty])
         for off in offs:
-          ax.arrow(
-            *(p-dn*off), *dn,
-            width=arrowWidth, #min(arrowWidth, nrg*0.15),
-            head_length=arrowHeadLen,
-            length_includes_head=True,
-            color=arcolor,
-          )
+          patches.append((
+            p-dn*off+verts0,
+            arcolor, # fc
+            arcolor, # ec
+          ))
+
+  if len(patches):
+    ax.add_collection(PolyCollection(
+      **{
+        k: v
+        for k, v in zip(('verts', 'facecolors', 'edgecolors'), zip(*patches))
+      },
+    ))
 
   ax.set_xlabel('xyz'[axes[0]])
   ax.set_ylabel('xyz'[axes[1]])

@@ -108,7 +108,7 @@ class WFCWidget(QWidget):
     self.showMario = Qt.Checked
     self.airborne = Qt.Checked
     self.yoshi = 0
-    self.fps = 4
+    self.fps = 8
     self.updating = False
     self.invertX = 0
     self.invertZ = 0
@@ -222,9 +222,9 @@ class WFCWidget(QWidget):
     pos = array(pos)
     x, y, z = pos
     # get collision data (static collision)
-    colInfo = d.read_struct(('gpMap', 0x10, 0), '>ffI4x4xI')
+    colInfo = d.read_struct(('gpMap', 0x10, 0), '>ffI4x4xII')
     if colInfo is None: return
-    xLimit, zLimit, xBlockCount, ptrStCLR = colInfo
+    xLimit, zLimit, xBlockCount, ptrStCLR, ptrDyCLR = colInfo
     ## TBGCheckListRoot[zBlockCount][xBlockCount]
     colOff = int((z+zLimit)//1024*xBlockCount + (x+xLimit)//1024)*36
     ## root->ground(12*2).next(4)
@@ -236,12 +236,14 @@ class WFCWidget(QWidget):
 
     t0 = time.time()
     stGnds, stRoofs, stWalls = [
-    #data1 = [ # TODO dynamic data
-      d.checkList2list(d.read_uint32(ptrStCLR+colOff+4+12*j))
+      [
+        tri
+        for ptrCLR in [ptrStCLR, ptrDyCLR]
+        for tri in d.checkList2list(d.read_uint32(ptrCLR+colOff+4+12*j))
+      ]
       for j in range(3)
     ]
     hitboxs = [
-      # ceiling
       ([
         #(c, array((0, -1, 0)))
         (makeRoof(tri, 82 if airborne else 2), array([0, -1, 0]))
@@ -285,6 +287,7 @@ class WFCWidget(QWidget):
       (pnXZ, axesXZ),
     ]):
       ax.patches.clear()
+      ax.collections.clear()
       make_geo_plot(ax, hitboxs, pos, pn, axes)
       if self.showMario:
         ax.add_patch(patches.Circle(pos[axes], 25, fc='red'))
