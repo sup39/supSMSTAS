@@ -15,7 +15,7 @@ pip install -U supSMSTAS
 :warning: Python 3.8以上が必要です
 
 ## 使い方
-cmd.exeなどで次の命令を実行すればsupSMSTASが起動します：
+cmd.exeなどで次の命令を実行すれば起動されます：
 ```
 python -m supSMSTAS
 ```
