@@ -1,10 +1,16 @@
 # supSMSTAS
-A tool to **sup**port **S**uper **M**ario **S**unshine **T**ool **A**ssisted **S**peedrun/Superplay.
+<p align="center">
+  <span>English</span> |
+  <a href="https://github.com/sup39/supSMSTAS/blob/main/README.ja.md">日本語</a>
+</p>
+
+*A tool to **sup**port **S**uper **M**ario **S**unshine **T**ool **A**ssisted **S**peedrun/Superplay*
 
 ## Installation
 ```
 pip install supSMSTAS
 ```
+:warning: Python 3.8 or above is required
 
 ## Usage
 ```
