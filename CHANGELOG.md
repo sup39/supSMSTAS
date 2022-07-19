@@ -1,4 +1,10 @@
 # CHANGELOG
+## \[v0.0.1.2] consider the -1 area of triangles (2022/07/20)
+- WFC
+  - consider the -1 area of triangles to improve the precision of WFC plot
+- SMSDolphin
+  - add `*args` and `**kwargs` to `hook()`
+  - use sup-dolphin-memory-lib >= 0.1.2 to solve pid problem
 ## \[v0.0.1.1] improve performance by using PolyCollection (2022/07/19)
 - WFC
   - improve process speed of `make_geo_plot()` by using PolyCollection

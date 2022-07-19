@@ -69,9 +69,9 @@ class SMSDolphin(Dolphin):
   def __init__(self):
     super().__init__()
     self.hooked = False
-  def hook(self):
+  def hook(self, *args, **kwargs):
     self.hooked = False
-    if Dolphin.hook(self) is None:
+    if super().hook(*args, **kwargs) is None:
       return 'SMS is not running'
     # found pid -> check game
     verID = self.memory.buf[:8].tobytes()

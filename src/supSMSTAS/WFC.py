@@ -30,14 +30,23 @@ makeTriPrism = lambda tri0, tri1: Polyhedron([
   (3, 4), (4, 5), (5, 3),
 ])
 
+def extendTriangle(tri, axis):
+  ans = np.array(tri, 'd')
+  tri = tri[:, axis]
+  for i in [-1, 0, 1]:
+    l1, l2 = tri[i]-tri[i+1], tri[i]-tri[i-1]
+    ans[i, axis] += (l1+l2)/np.abs(np.cross(l1, l2).item())
+  return ans
+
 def makeGround(tri, hG=0):
-  vertsLow = tri.verts-(0,108,0)
+  vertsE = extendTriangle(tri.verts, [0, 2])
+  vertsLow = vertsE-(0,108,0)
   ySlice = tri.minY-30
   v = array(vertsLow)
   vertsLow[:,1] = np.clip(vertsLow[:,1], a_min=ySlice, a_max=None)
   verts = [
     *vertsLow,
-    *(tri.verts+(0,hG,0)),
+    *(vertsE+(0,hG,0)),
   ]
   edges = [
     # top face
@@ -70,12 +79,14 @@ def makeGround(tri, hG=0):
   poly = Polyhedron(verts, edges)
   return poly
 def makeRoof(tri, hR=82):
-  poly = makeTriPrism(tri.verts-(0,hR,0), tri.verts-(0,160,0))
+  verts = extendTriangle(tri.verts, [0, 2])
+  poly = makeTriPrism(verts-(0,hR,0), verts-(0,160,0))
   return poly
 def makeWall(tri, rW=50, dy=30):
-  verts = tri.verts - (0, dy, 0)
   n = tri.n
-  off = (np.abs(rW/n[0]),0,0) if np.abs(n[0])>0.707 else (0,0,np.abs(rW/n[2]))
+  isXWall = np.abs(n[0])>0.707
+  verts = extendTriangle(tri.verts, [2 if isXWall else 0, 1]) - (0, dy, 0)
+  off = (np.abs(rW/n[0]),0,0) if isXWall else (0,0,np.abs(rW/n[2]))
   poly = makeTriPrism(verts-off, verts+off)
   return poly
 
