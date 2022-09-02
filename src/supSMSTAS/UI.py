@@ -220,6 +220,7 @@ class WFCWidget(QWidget):
     pos = d.read_struct(('gpMarioOriginal', 0x10), '>3f')
     if pos is None: return
     pos = array(pos)
+    pos[1] -= 0
     x, y, z = pos
     # get collision data (static collision)
     colInfo = d.read_struct(('gpMap', 0x10, 0), '>ffI4x4xII')
@@ -283,7 +284,7 @@ class WFCWidget(QWidget):
     # ax
     xzAngle = self.xzAngle
     for ax, (pn, axes) in zip(self.mcv.axs, [
-      ((0, 1, 0), [0, 2]),
+      ((0, 1, 0), [2, 0]), # TODO
       (pnXZ, axesXZ),
     ]):
       ax.patches.clear()
@@ -291,14 +292,17 @@ class WFCWidget(QWidget):
       make_geo_plot(ax, hitboxs, pos, pn, axes)
       if self.showMario:
         ax.add_patch(patches.Circle(pos[axes], 25, fc='red'))
-      if self.trackMario:
-        offs = [(-1000, 1000), (-1000, 1000), (-1000, 1000)] # TODO
-        for f, i in zip((ax.set_xlim, ax.set_ylim), axes):
+      for a, i in zip('xy', axes):
+        if self.trackMario:
+          offs = [(-1000, 1000), (-1000, 1000), (-1000, 1000)] # TODO
           p = pos[i]
           d0, d1 = offs[i]
-          if invertX & (i==0) | invertZ & (i==2): # invert
-            d0, d1 = d1, d0
-          f(p+d0, p+d1)
+          v0, v1 = p+d0, p+d1
+        else:
+          v0, v1 = getattr(ax, f'get_{a}lim')()
+        if i!=1 and (v0<v1) ^ ((invertX & (i==0)) | (invertZ & (i==2))): # invert
+          v0, v1 = v1, v0
+        getattr(ax, f'set_{a}lim')(v0, v1)
       ax.grid(True)
     # apply
     self.mcv.fig.tight_layout()
